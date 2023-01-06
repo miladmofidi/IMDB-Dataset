@@ -6,11 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author milad.mofidi@gmail.com
  */
 @SpringBootApplication
-public class LoboxImdbApplication
+public class ImdbApplication
 {
 
     public static void main(String[] args)
     {
-        SpringApplication.run(LoboxImdbApplication.class, args);
+        SpringApplication.run(ImdbApplication.class, args);
     }
 }
