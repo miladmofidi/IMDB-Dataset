@@ -1,8 +1,10 @@
 package com.example.loboximdb.service;
 
 import com.example.loboximdb.model.ImdbEntity;
-
+/**
+ * @author milad.mofidi@gmail.com
+ */
 public interface ImdbService
 {
-    public ImdbEntity createOrUpdateImdb(ImdbEntity entity);
+    ImdbEntity createOrUpdateImdb(ImdbEntity entity);
 }

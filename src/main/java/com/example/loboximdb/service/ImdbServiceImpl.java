@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Optional;
 
+/**
+ * @author milad.mofidi@gmail.com
+ */
 @Service
 public class ImdbServiceImpl implements ImdbService
 {

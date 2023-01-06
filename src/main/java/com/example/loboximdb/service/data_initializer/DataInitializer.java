@@ -1,13 +1,7 @@
-package com.example.loboximdb;
+package com.example.loboximdb.service.data_initializer;
 
 import com.example.loboximdb.model.ImdbEntity;
-import com.example.loboximdb.service.ImdbService;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,24 +16,48 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
-@Component
-public class Main implements CommandLineRunner
+/**
+ * @author milad mofidi
+ * user: miladm on 1/6/2023
+ */
+public class DataInitializer
 {
-    //@Resource
-    //private ImdbRepository repository;
-    @Resource
-    private ImdbService imdbService;
-
-
-    @Override
-    public void run(String... args) throws Exception
-    {
-        readLinesFromGZ();
-    }
-
-    public List<String> readLinesFromGZ()
+    public static List<String> readLinesFromOnlineImdbGzip() throws IOException
     {
         List<String> lines = new ArrayList<>();
+
+        URL url = new URL("https://datasets.imdbws.com/name.basics.tsv.gz");
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("GET");
+        httpURLConnection.setRequestProperty("User-Agent",
+                                             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36");
+        httpURLConnection.setDoInput(true);
+
+
+        try (GZIPInputStream gzip = new GZIPInputStream(httpURLConnection.getInputStream());
+             BufferedReader br = new BufferedReader(new InputStreamReader(gzip));)
+        {
+            String line = null;
+            while ((line = br.readLine()) != null)
+            {
+                //lines.add(line);
+                System.out.println(line);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace(System.err);
+        }
+
+        httpURLConnection.disconnect();
+
+        return lines;
+    }
+
+    public static List<String> readLinesFromLocalGzip()
+    {
+        List<String> lines = new ArrayList<>();
+        //path for local gzip dataset file
         File file = new File("C:\\Users\\miladm\\Downloads\\newTsv25000.tsv.gzip");
         List<ImdbEntity> imdbEntityList = new ArrayList<>();
 
@@ -106,48 +124,5 @@ public class Main implements CommandLineRunner
             e.printStackTrace(System.err);
         }
         return lines;
-    }
-
-    public static List<String> readOnlineGZ() throws IOException
-    {
-        List<String> lines = new ArrayList<>();
-        URL url = new URL("https://datasets.imdbws.com/name.basics.tsv.gz");
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestMethod("GET");
-        httpURLConnection.setRequestProperty("User-Agent",
-                                             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36");
-        httpURLConnection.setDoInput(true);
-
-
-        try (GZIPInputStream gzip = new GZIPInputStream(httpURLConnection.getInputStream());
-             BufferedReader br = new BufferedReader(new InputStreamReader(gzip));)
-        {
-            String line = null;
-            while ((line = br.readLine()) != null)
-            {
-                //lines.add(line);
-                System.out.println(line);
-            }
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace(System.err);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace(System.err);
-        }
-
-        httpURLConnection.disconnect();
-
-        return lines;
-    }
-
-
-    @PreDestroy
-    public void preDestroy() throws IOException
-    {
-        //Delete folder before bean destroy.
-        FileUtils.deleteDirectory(new File("C:\\tempDb"));
     }
 }
