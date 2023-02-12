@@ -7,9 +7,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,11 +60,19 @@ public class DataInitializer
     public static List<String> readLinesFromLocalGzip()
     {
         List<String> lines = new ArrayList<>();
-        //path for local gzip dataset file
-        File file = new File("C:\\Users\\miladm\\Downloads\\newTsv25000.tsv.gzip");
+        //path for local gzip dataset file with 25000 items
+        //File file = new File("C:\\Users\\miladm\\Downloads\\newTsv25000.tsv.gzip");
+        //path for local gzip dataset file with 2 items just for test
+        String fileName = "imdb_gzip_with_sample-data.gzip";
+        Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip",fileName);
+        File gzipFile = new File(sourcePath.toUri());
+
+
+        //InputStream resourceAsStream = DataInitializer.class.getResourceAsStream("imdb_gzip_with_sample-data.gzip");
+        //File gzipFile = new File("C:\\Users\\miladm\\Downloads\\newTsv25000.tsv.gzip");
         List<ImdbEntity> imdbEntityList = new ArrayList<>();
 
-        try (GZIPInputStream gzip = new GZIPInputStream(new FileInputStream(file));
+        try (GZIPInputStream gzip = new GZIPInputStream(new FileInputStream(gzipFile));
              BufferedReader br = new BufferedReader(new InputStreamReader(gzip));)
         {
             String line = null;
@@ -73,10 +84,12 @@ public class DataInitializer
                 if (removeHeaderCounter == 0)
                 {
                     removeHeaderCounter++;
-                    header = line.split("\t");
+                    //header = line.split("\t");
+                    header = line.split(",");
                     continue;
                 }
                 String[] lineItems = line.split("\t");
+                //String[] lineItems = line.split(",");
 
                 if (lineItems.length > 0)
                 {

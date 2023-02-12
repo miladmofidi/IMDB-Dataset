@@ -28,7 +28,7 @@ public class Main implements CommandLineRunner
         DataInitializer.readLinesFromLocalGzip();
 
         //read Gzip file from IMDB server
-        DataInitializer.readLinesFromOnlineImdbGzip();
+       // DataInitializer.readLinesFromOnlineImdbGzip();
     }
 
 
