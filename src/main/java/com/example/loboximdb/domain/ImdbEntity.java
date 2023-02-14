@@ -1,4 +1,4 @@
-package com.example.loboximdb.model;
+package com.example.loboximdb.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.List;
 /**
  * @author milad.mofidi@gmail.com
@@ -21,11 +18,11 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "tbl_imdb")
+//@Table(name = "tbl_imdb")
 public class ImdbEntity
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue
     @Column(name="nconst")
     private String nconst;
 
@@ -40,7 +37,7 @@ public class ImdbEntity
 
     @Column(name="primaryProfession")
     @ElementCollection(targetClass=String.class)
-    //@CollectionTable(name = "TBL_IMDB", joinColumns = @JoinColumn(name = "nconst"))
+     //@CollectionTable(name = "TBL_IMDB", joinColumns = @JoinColumn(name = "nconst"))
     private List<String> PrimaryProfession;
 
     @Column(name="knownForTitles")

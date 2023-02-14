@@ -1,12 +1,10 @@
-package com.example.loboximdb;
+package com.example.loboximdb.service;
 
-import com.example.loboximdb.model.ImdbDto;
+import com.example.loboximdb.domain.ImdbDto;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -24,7 +22,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class CsvParsingByOpenCsv
 {
-    private static String fileName = "imdb_gzip_with_sample-data.gzip";
+    private static String fileName = "imdb_gzip_with_sample_data.gz";
     private static Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip", fileName);
 
     public static void main(String[] args) throws IOException

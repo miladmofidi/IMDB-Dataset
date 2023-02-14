@@ -1,21 +1,33 @@
 package com.example.loboximdb.service.data_initializer;
 
-import com.example.loboximdb.model.ImdbEntity;
+import com.example.loboximdb.domain.ImdbEntity;
+import com.example.loboximdb.domain.enums.ImdbDataModelIndex;
+import com.example.loboximdb.service.ImdbServiceImpl;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
@@ -23,8 +35,18 @@ import java.util.zip.GZIPInputStream;
  * @author milad mofidi
  * user: miladm on 1/6/2023
  */
-public class DataInitializer
+@Component
+public class DataInitializer implements CommandLineRunner
 {
+    private static ImdbServiceImpl service;
+    private static String fileName = "imdb_gzip_with_sample_data.tsv.gz";
+    private static Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip", fileName);
+
+    public DataInitializer(ImdbServiceImpl service)
+    {
+        this.service = service;
+    }
+
     public static List<String> readLinesFromOnlineImdbGzip() throws IOException
     {
         List<String> lines = new ArrayList<>();
@@ -57,18 +79,18 @@ public class DataInitializer
         return lines;
     }
 
-    public static List<String> readLinesFromLocalGzip()
+    public static List<String> readLinesFromLocalGzipOldVer()
     {
         List<String> lines = new ArrayList<>();
         //path for local gzip dataset file with 25000 items
         //File file = new File("C:\\Users\\miladm\\Downloads\\newTsv25000.tsv.gzip");
         //path for local gzip dataset file with 2 items just for test
-        String fileName = "imdb_gzip_with_sample-data.gzip";
+        String fileName = "imdb_gzip_with_sample_data.gz";
         Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip",fileName);
         File gzipFile = new File(sourcePath.toUri());
 
 
-        //InputStream resourceAsStream = DataInitializer.class.getResourceAsStream("imdb_gzip_with_sample-data.gzip");
+        //InputStream resourceAsStream = DataInitializer.class.getResourceAsStream("imdb_gzip_with_sample_data.gz");
         //File gzipFile = new File("C:\\Users\\miladm\\Downloads\\newTsv25000.tsv.gzip");
         List<ImdbEntity> imdbEntityList = new ArrayList<>();
 
@@ -137,5 +159,62 @@ public class DataInitializer
             e.printStackTrace(System.err);
         }
         return lines;
+    }
+
+
+    public static void readLinesFromLocalGzip() throws IOException
+    {
+        File gzipFile = new File(sourcePath.toUri());
+
+        try (
+                GZIPInputStream gzip = new GZIPInputStream(Files.newInputStream(gzipFile.toPath()));
+                Reader reader = new BufferedReader(new InputStreamReader(gzip, StandardCharsets.UTF_8));
+                CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT.builder()
+                        .setHeader(ImdbDataModelIndex.NCONST.label,
+                                   ImdbDataModelIndex.PRIMARYNAME.label,
+                                   ImdbDataModelIndex.BIRTHYEAR.label,
+                                   ImdbDataModelIndex.DEATHYEAR.label,
+                                   ImdbDataModelIndex.PRIMARYPROFESSION.label,
+                                   ImdbDataModelIndex.KNOWNFORTITLES.label)
+                        .setSkipHeaderRecord(true)
+                        .setTrim(true)
+                        .build());
+        )
+        {
+            int itemCounter=0;
+            for (CSVRecord csvRecord : csvParser)
+            {
+                if(csvRecord.size() >= csvParser.getHeaderMap().size()){
+                Optional<ImdbEntity> imdbEntity =
+                        Optional.ofNullable(ImdbEntity.builder()
+                                                                              .nconst(csvRecord.get(ImdbDataModelIndex.NCONST.label).trim())
+                                                                              .PrimaryName(csvRecord.get(ImdbDataModelIndex.PRIMARYNAME.label).trim())
+                                                                              .BirthYear(ImdbDataModelIndex.BIRTHYEAR.label.trim())
+                                                                              .DeathYear(csvRecord.get(ImdbDataModelIndex.DEATHYEAR.label).trim())
+                                                                              .PrimaryProfession(Arrays.asList(
+                                                                                      csvRecord.get(ImdbDataModelIndex.PRIMARYPROFESSION.label).trim().split(",")))
+                                                                              .KnownForTitles(Arrays.asList(
+                                                                                      csvRecord.get(ImdbDataModelIndex.KNOWNFORTITLES.label).trim().split(",")))
+                                                                              .build());
+                imdbEntity.ifPresent(obj -> service.createOrUpdateImdb(obj));
+                System.out.println("New imdb has been saved in Database!");
+                itemCounter++;
+            }
+            }
+            System.out.println("Count of saved items: " + itemCounter);
+        }
+    }
+
+    @Override
+    public void run(String... args) throws Exception
+    {
+        readLinesFromLocalGzip();
+    }
+
+    @PreDestroy
+    public void preDestroy() throws IOException
+    {
+        //Delete folder before bean destroy.
+        FileUtils.deleteDirectory(new File("C:\\tempDb"));
     }
 }

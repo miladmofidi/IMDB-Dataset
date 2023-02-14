@@ -1,12 +1,9 @@
-package com.example.loboximdb.model;
+package com.example.loboximdb.domain;
 
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvBindByPosition;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import java.util.List;
 
 /**

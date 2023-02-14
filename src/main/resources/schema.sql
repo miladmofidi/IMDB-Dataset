@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS tbl_imdb;
+/*DROP TABLE IF EXISTS tbl_imdb;
 
 CREATE TABLE tbl_imdb (
                                nconst VARCHAR(250) AUTO_INCREMENT  PRIMARY KEY,
@@ -10,4 +10,4 @@ CREATE TABLE tbl_imdb (
 
 
 
-);
+);*/

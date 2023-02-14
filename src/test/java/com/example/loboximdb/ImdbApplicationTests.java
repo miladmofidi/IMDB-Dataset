@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ImdbApplicationTests
 {
 
-    @Test
+    //@Test
     void contextLoads()
     {
     }

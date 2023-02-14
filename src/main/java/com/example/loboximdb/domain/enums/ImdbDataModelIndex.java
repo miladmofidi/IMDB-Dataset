@@ -1,4 +1,4 @@
-package com.example.loboximdb.model.enums;
+package com.example.loboximdb.domain.enums;
 
 /**
  * @author milad.mofidi@gmail.com
