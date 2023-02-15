@@ -1,7 +1,10 @@
 package com.example.loboximdb.domain;
 
 import com.opencsv.bean.CsvBindByName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -14,24 +17,27 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ImdbDto
 {
     //@CsvBindByPosition(position = 0)
-    @CsvBindByName
+    //@CsvBindByName
     private String nconst;
     //@CsvBindByPosition(position = 1)
-    @CsvBindByName
+    //@CsvBindByName
     private String PrimaryName;
     //@CsvBindByPosition(position = 2)
-    @CsvBindByName
+    //@CsvBindByName
     private String BirthYear;
     //@CsvBindByPosition(position = 3)
-    @CsvBindByName
+    //@CsvBindByName
     private String DeathYear;
     //@CsvBindByPosition(position = 4)
-    @CsvBindByName
+    //@CsvBindByName
     private List<String> PrimaryProfession;
     //@CsvBindByPosition(position = 5)
-    @CsvBindByName
+    //@CsvBindByName
     private List<String> KnownForTitles;
 }

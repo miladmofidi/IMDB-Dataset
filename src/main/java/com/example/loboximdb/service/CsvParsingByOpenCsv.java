@@ -22,7 +22,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class CsvParsingByOpenCsv
 {
-    private static String fileName = "imdb_gzip_with_sample_data.gz";
+    private static String fileName = "imdb_gzip_with_sample_data.tsv.gz";
     private static Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip", fileName);
 
     public static void main(String[] args) throws IOException

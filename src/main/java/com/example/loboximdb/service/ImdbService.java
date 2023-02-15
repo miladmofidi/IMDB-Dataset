@@ -1,5 +1,6 @@
 package com.example.loboximdb.service;
 
+import com.example.loboximdb.domain.ImdbDto;
 import com.example.loboximdb.domain.ImdbEntity;
 
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
  */
 public interface ImdbService
 {
-    ImdbEntity createOrUpdateImdb(ImdbEntity entity);
-    List<ImdbEntity> findAllImdbs();
+    ImdbDto insertOrUpdateImdb(ImdbDto input);
+    List<ImdbDto> findAllImdbs();
     long countOfAllImdbs();
-    ImdbEntity findByNconst(String nconst);
+    ImdbDto findByNconst(String nconst);
 }

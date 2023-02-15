@@ -1,7 +1,10 @@
 package com.example.loboximdb.controller;
 
+import com.example.loboximdb.domain.ImdbDto;
 import com.example.loboximdb.domain.ImdbEntity;
 import com.example.loboximdb.service.ImdbService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +22,21 @@ import java.util.List;
  * email: milad.mofidi@gmail.com
  * user: miladm on 2/14/2023
  */
+
+/*This Controller was generated just for demonstration of the data insert and read process.*/
 @RestController
 @RequestMapping(value = "/api/imdb")
 public class ImdbController
 {
+    private static final Logger LOGGER = LogManager.getLogger(ImdbController.class);
     @Autowired
     private ImdbService imdbService;
 
     @PostMapping("/save")
-    public ResponseEntity<ImdbEntity> saveImdb(@RequestBody ImdbEntity entity)
+    public ResponseEntity<ImdbDto> saveImdb(@RequestBody ImdbDto input)
     {
-        ImdbEntity result = imdbService.createOrUpdateImdb(entity);
+        LOGGER.debug("REST request to save IMDB: {}", input);
+        ImdbDto result = imdbService.insertOrUpdateImdb(input);
         if (result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
@@ -38,15 +45,17 @@ public class ImdbController
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<ImdbEntity>> getAllImdbs()
+    public ResponseEntity<List<ImdbDto>> getAllImdbs()
     {
-        List<ImdbEntity> result = imdbService.findAllImdbs();
+        LOGGER.debug("REST request to get all IMDBs");
+        List<ImdbDto> result = imdbService.findAllImdbs();
         if (result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+
     @GetMapping("/getCountOfAll")
     public ResponseEntity<Long> getCountOfAll()
     {
@@ -57,18 +66,17 @@ public class ImdbController
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-   // @GetMapping(value = "/{appId}", produces = "application/json", consumes = "application/json")
+
     @GetMapping("/getByNconst/{nconst}")
-    public ResponseEntity<ImdbEntity> getImdbByNconst(@PathVariable String nconst)
+    public ResponseEntity<ImdbDto> getImdbByNconst(@PathVariable String nconst)
     {
-        ImdbEntity result = imdbService.findByNconst(nconst);
+        LOGGER.debug("REST request to get IMDB with 'nconst': {}", nconst);
+        ImdbDto result = imdbService.findByNconst(nconst);
         if (result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-
-
 }
 

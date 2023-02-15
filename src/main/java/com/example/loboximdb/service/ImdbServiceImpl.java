@@ -1,12 +1,18 @@
 package com.example.loboximdb.service;
 
+import com.example.loboximdb.domain.ImdbDTOMapper;
+import com.example.loboximdb.domain.ImdbDto;
 import com.example.loboximdb.domain.ImdbEntity;
+import com.example.loboximdb.domain.Mapper;
 import com.example.loboximdb.repository.ImdbRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author milad.mofidi@gmail.com
@@ -14,55 +20,49 @@ import java.util.Optional;
 @Service
 public class ImdbServiceImpl implements ImdbService
 {
-    @Resource
     private ImdbRepository repository;
+    private final Mapper mapper;
 
-    public ImdbEntity createOrUpdateImdb(ImdbEntity entity)
+    public ImdbServiceImpl(ImdbRepository repository, Mapper mapper)
     {
-        Optional<ImdbEntity> imdb = repository.findById(entity.getNconst());
+        this.repository = repository;
+        this.mapper = mapper;
+    }
+
+    public ImdbDto insertOrUpdateImdb(ImdbDto inputtedDto)
+    {
+        Optional<ImdbEntity> imdb = repository.findById(inputtedDto.getNconst());
         if (imdb.isPresent())
         {
-            ImdbEntity imdbEntity = imdb.get();
-            imdbEntity.setBirthYear(entity.getPrimaryName());
-            imdbEntity.setDeathYear(entity.getDeathYear());
-            imdbEntity.setBirthYear(entity.getBirthYear());
-            imdbEntity.setKnownForTitles(entity.getKnownForTitles());
-            imdbEntity.setPrimaryProfession(entity.getPrimaryProfession());
-            imdbEntity = repository.save(imdbEntity);
-            return imdbEntity;
+            imdb.get().setPrimaryName(inputtedDto.getPrimaryName());
+            imdb.get().setDeathYear(inputtedDto.getDeathYear());
+            imdb.get().setBirthYear(inputtedDto.getBirthYear());
+            imdb.get().setKnownForTitles(inputtedDto.getKnownForTitles());
+            imdb.get().setPrimaryProfession(inputtedDto.getPrimaryProfession());
+            ImdbEntity entity = repository.save(imdb.get());
+            return mapper.entityToDto(entity);
         }
-        else
-        {
-            entity = repository.save(entity);
-            return entity;
-        }
+
+        ImdbEntity entity = mapper.dtoToEntity(inputtedDto);
+        entity = repository.save(entity);
+        return mapper.entityToDto(entity);
     }
 
-    public List<ImdbEntity> findAllImdbs()
+
+    public List<ImdbDto> findAllImdbs()
     {
-        List<ImdbEntity> all = repository.findAll();
-        if (all != null)
-        {
-            return all;
-        }
-        return null;
+        return repository.findAll().stream().map(mapper::entityToDto)
+                .collect(Collectors.toList());
     }
+
     public long countOfAllImdbs()
     {
-        long count = repository.count();
-        if (count != 0)
-        {
-            return count;
-        }
-        return 0;
-    }
-    public ImdbEntity findByNconst(String nconst)
-    {
-        ImdbEntity entity = repository.findByNconst(nconst);
-        if (entity!=null){
-            return entity;
-        }
-        return null;
+        return repository.count();
     }
 
+    public ImdbDto findByNconst(String nconst)
+    {
+        ImdbEntity entity = repository.findByNconst(nconst);
+        return mapper.entityToDto(entity);
+    }
 }
