@@ -27,20 +27,20 @@ public class ImdbEntity
     private String nconst;
 
     @Column(name="primaryName")
-    private String PrimaryName;
+    private String primaryName;
 
     @Column(name="birthYear")
-    private String BirthYear;
+    private String birthYear;
 
     @Column(name="deathYear")
-    private String DeathYear;
+    private String deathYear;
 
     @Column(name="primaryProfession")
     @ElementCollection(targetClass=String.class)
      //@CollectionTable(name = "TBL_IMDB", joinColumns = @JoinColumn(name = "nconst"))
-    private List<String> PrimaryProfession;
+    private List<String> primaryProfession;
 
     @Column(name="knownForTitles")
     @ElementCollection(targetClass=String.class)
-    private List<String> KnownForTitles;
+    private List<String> knownForTitles;
 }

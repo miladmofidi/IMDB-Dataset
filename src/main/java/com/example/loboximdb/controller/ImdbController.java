@@ -1,7 +1,7 @@
 package com.example.loboximdb.controller;
 
+import com.example.loboximdb.exception.RecordNotFoundException;
 import com.example.loboximdb.domain.ImdbDto;
-import com.example.loboximdb.domain.ImdbEntity;
 import com.example.loboximdb.service.ImdbService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ import java.util.List;
 public class ImdbController
 {
     private static final Logger LOGGER = LogManager.getLogger(ImdbController.class);
-    @Autowired
+    @Resource
     private ImdbService imdbService;
 
     @PostMapping("/save")
@@ -53,30 +54,56 @@ public class ImdbController
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        else
+        {
+            throw new RecordNotFoundException("No IMDB item found");
+        }
     }
 
     @GetMapping("/getCountOfAll")
-    public ResponseEntity<Long> getCountOfAll()
+    public ResponseEntity<Long> getCountOfAllImdbs()
     {
+        LOGGER.debug("REST request to get count of all IMDBs");
         long count = imdbService.countOfAllImdbs();
         if (count != 0)
         {
             return new ResponseEntity<>(count, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        else
+        {
+            throw new RecordNotFoundException("No IMDB item found, count of IMDBs is: " + count);
+        }
     }
 
     @GetMapping("/getByNconst/{nconst}")
     public ResponseEntity<ImdbDto> getImdbByNconst(@PathVariable String nconst)
     {
-        LOGGER.debug("REST request to get IMDB with 'nconst': {}", nconst);
+        LOGGER.debug("REST request to get IMDB with nconst: {}", nconst);
         ImdbDto result = imdbService.findByNconst(nconst);
         if (result != null)
         {
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        else
+        {
+            throw new RecordNotFoundException("Invalid nconst: " + nconst);
+        }
+    }
+
+    @GetMapping("/getByPrimaryName/{primaryName}")
+    public ResponseEntity<ImdbDto> getImdbByPrimaryName(@PathVariable String primaryName)
+    {
+        LOGGER.debug("REST request to get IMDB with primaryName: {}", primaryName);
+        ImdbDto result = imdbService.findByPrimaryName(primaryName);
+        if (result != null)
+        {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else
+        {
+            throw new RecordNotFoundException("Invalid primaryName: "+ primaryName);
+        }
+        //return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
 

@@ -1,15 +1,11 @@
 package com.example.loboximdb.service;
 
-import com.example.loboximdb.domain.ImdbDTOMapper;
 import com.example.loboximdb.domain.ImdbDto;
 import com.example.loboximdb.domain.ImdbEntity;
 import com.example.loboximdb.domain.Mapper;
 import com.example.loboximdb.repository.ImdbRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,6 +59,12 @@ public class ImdbServiceImpl implements ImdbService
     public ImdbDto findByNconst(String nconst)
     {
         ImdbEntity entity = repository.findByNconst(nconst);
+        return mapper.entityToDto(entity);
+    }
+
+    public ImdbDto findByPrimaryName(String primaryName)
+    {
+        ImdbEntity entity = repository.findByPrimaryName(primaryName);
         return mapper.entityToDto(entity);
     }
 }

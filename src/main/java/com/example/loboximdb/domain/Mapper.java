@@ -3,7 +3,6 @@ package com.example.loboximdb.domain;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 /**
  * @author milad mofidi
@@ -43,9 +42,9 @@ public class Mapper
             {
                 return null;
             }
-            return ImdbEntity.builder().nconst(dto.getNconst()).PrimaryName(dto.getPrimaryName()).BirthYear(
-                            dto.getBirthYear()).DeathYear(dto.getDeathYear()).PrimaryProfession(dto.getPrimaryProfession())
-                    .KnownForTitles(dto.getKnownForTitles()).build();
+            return ImdbEntity.builder().nconst(dto.getNconst()).primaryName(dto.getPrimaryName()).birthYear(
+                            dto.getBirthYear()).deathYear(dto.getDeathYear()).primaryProfession(dto.getPrimaryProfession())
+                    .knownForTitles(dto.getKnownForTitles()).build();
         }
         catch (Exception e)
         {

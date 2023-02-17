@@ -14,4 +14,6 @@ public interface ImdbService
     List<ImdbDto> findAllImdbs();
     long countOfAllImdbs();
     ImdbDto findByNconst(String nconst);
+    ImdbDto findByPrimaryName(String nconst);
+    
 }
