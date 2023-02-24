@@ -33,11 +33,6 @@ public class TitleEntity
     private List<String> directors;
 
     @Column(name="writers")
-    //@ElementCollection(targetClass=String.class)
-    @ManyToMany
-    @JoinTable(
-            name = "course_like",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @ElementCollection(targetClass=String.class)
     private List<String> writers;
 }

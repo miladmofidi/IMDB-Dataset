@@ -42,7 +42,6 @@ public class NameEntity
     private List<String> primaryProfession;
 
     @Column(name="knownForTitles")
-    @ManyToMany
     @ElementCollection(targetClass=String.class)
     private List<String> knownForTitles;
 }
