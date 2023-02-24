@@ -1,7 +1,7 @@
 package com.example.loboximdb.domain.mappers;
 
 import com.example.loboximdb.domain.dto.TitleDTO;
-import com.example.loboximdb.domain.entity.TitleEntity;
+import com.example.loboximdb.domain.entity.Title;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class TitleMapper
 {
     private static final Logger LOGGER = LogManager.getLogger(TitleMapper.class);
 
-    public TitleDTO entityToDto(TitleEntity entity)
+    public TitleDTO entityToDto(Title entity)
     {
         try
         {
@@ -35,7 +35,7 @@ public class TitleMapper
         }
     }
 
-    public TitleEntity dtoToEntity(TitleDTO dto)
+    public Title dtoToEntity(TitleDTO dto)
     {
         try
         {
@@ -43,7 +43,7 @@ public class TitleMapper
             {
                 return null;
             }
-            return TitleEntity.builder().tconst(dto.getTconst())
+            return Title.builder().tconst(dto.getTconst())
                     .directors(dto.getDirectors())
                     .writers(dto.getWriters()).build();
         }

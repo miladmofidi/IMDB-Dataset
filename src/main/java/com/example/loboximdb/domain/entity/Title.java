@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import java.util.List;
+
 /**
  * @author milad.mofidi@gmail.com
  */
@@ -19,29 +20,18 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
-//@Table(name = "tbl_imdb")
-public class NameEntity
+public class Title
 {
     @Id
-    //@GeneratedValue
-    @Column(name="nconst")
-    private String nconst;
+    @Column(name="tconst")
+    private String tconst;
 
-    @Column(name="primaryName")
-    private String primaryName;
-
-    @Column(name="birthYear")
-    private String birthYear;
-
-    @Column(name="deathYear")
-    private String deathYear;
-
-    @Column(name="primaryProfession")
+    @Column(name="directors")
     @ElementCollection(targetClass=String.class)
-     //@CollectionTable(name = "TBL_IMDB", joinColumns = @JoinColumn(name = "nconst"))
-    private List<String> primaryProfession;
+    private List<String> directors;
 
-    @Column(name="knownForTitles")
+    @Column(name="writers")
     @ElementCollection(targetClass=String.class)
-    private List<String> knownForTitles;
+    //@ManyToMany
+    private List<String> writers;
 }

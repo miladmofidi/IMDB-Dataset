@@ -1,9 +1,8 @@
 package com.example.loboximdb.service.data_initializer;
 
 import com.example.loboximdb.domain.dto.TitleDTO;
-import com.example.loboximdb.domain.entity.TitleEntity;
+import com.example.loboximdb.domain.entity.Title;
 import com.example.loboximdb.domain.mappers.TitleMapper;
-import com.example.loboximdb.service.NameServiceImpl;
 import com.example.loboximdb.service.TitleService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -104,7 +103,7 @@ public class TitlesDatasetInitializer implements CommandLineRunner
             {
                 if (csvRecord.size() >= csvParser.getHeaderMap().size())
                 {
-                    Optional<TitleEntity> titleEntity = buildImdbEntity(csvRecord);
+                    Optional<Title> titleEntity = buildImdbEntity(csvRecord);
                     titleEntity.ifPresent(obj -> {
                         TitleDTO titleDTO = titleMapper.entityToDto(titleEntity.get());
                         service.insertOrUpdateImdb(titleDTO);
@@ -126,9 +125,9 @@ public class TitlesDatasetInitializer implements CommandLineRunner
         }
     }
 
-    private static Optional<TitleEntity> buildImdbEntity(CSVRecord csvRecord)
+    private static Optional<Title> buildImdbEntity(CSVRecord csvRecord)
     {
-        return Optional.ofNullable(TitleEntity.builder()
+        return Optional.ofNullable(Title.builder()
                                            .tconst(csvRecord.get("tconst").trim())
                                            .directors(Arrays.asList(
                                                    csvRecord.get("directors")

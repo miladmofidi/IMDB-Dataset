@@ -1,6 +1,6 @@
 package com.example.loboximdb.domain.mappers;
 
-import com.example.loboximdb.domain.entity.NameEntity;
+import com.example.loboximdb.domain.entity.Name;
 import com.example.loboximdb.domain.dto.NameDTO;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,12 @@ import java.util.function.Function;
  * user: miladm on 2/15/2023
  */
 @Service
-public class ImdbDTOMapper implements Function<NameEntity, NameDTO>
+public class ImdbDTOMapper implements Function<Name, NameDTO>
 {
     @Override
-    public NameDTO apply(NameEntity nameEntity)
+    public NameDTO apply(Name name)
     {
-        return new NameDTO(nameEntity.getNconst(), nameEntity.getPrimaryName(), nameEntity.getBirthYear(),
-                           nameEntity.getDeathYear(), nameEntity.getPrimaryProfession(), nameEntity.getKnownForTitles());
+        return new NameDTO(name.getNconst(), name.getPrimaryName(), name.getBirthYear(),
+                           name.getDeathYear(), name.getPrimaryProfession(), name.getKnownForTitles());
     }
 }

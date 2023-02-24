@@ -1,7 +1,7 @@
 package com.example.loboximdb.service.data_initializer;
 
 import com.example.loboximdb.domain.dto.NameDTO;
-import com.example.loboximdb.domain.entity.NameEntity;
+import com.example.loboximdb.domain.entity.Name;
 import com.example.loboximdb.domain.mappers.NameMapper;
 import com.example.loboximdb.domain.enums.ImdbDataModelIndex;
 import com.example.loboximdb.service.NameServiceImpl;
@@ -107,7 +107,7 @@ public class NamesDatasetInitializer implements CommandLineRunner
             {
                 if (csvRecord.size() >= csvParser.getHeaderMap().size())
                 {
-                    Optional<NameEntity> imdbEntity = buildImdbEntity(csvRecord);
+                    Optional<Name> imdbEntity = buildImdbEntity(csvRecord);
                     imdbEntity.ifPresent(obj -> {
                         NameDTO nameDTO = nameMapper.entityToDto(imdbEntity.get());
                         service.insertOrUpdateImdb(nameDTO);
@@ -129,9 +129,9 @@ public class NamesDatasetInitializer implements CommandLineRunner
         }
     }
 
-    private static Optional<NameEntity> buildImdbEntity(CSVRecord csvRecord)
+    private static Optional<Name> buildImdbEntity(CSVRecord csvRecord)
     {
-        return Optional.ofNullable(NameEntity.builder()
+        return Optional.ofNullable(Name.builder()
                                            .nconst(csvRecord.get(ImdbDataModelIndex.NCONST.label).trim())
                                            .primaryName(csvRecord.get(ImdbDataModelIndex.PRIMARYNAME.label)
                                                                 .trim())

@@ -1,7 +1,7 @@
 package com.example.loboximdb.domain.mappers;
 
 import com.example.loboximdb.domain.dto.NameDTO;
-import com.example.loboximdb.domain.entity.NameEntity;
+import com.example.loboximdb.domain.entity.Name;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class NameMapper
 {
     private static final Logger LOGGER = LogManager.getLogger(NameMapper.class);
 
-    public NameDTO entityToDto(NameEntity entity)
+    public NameDTO entityToDto(Name entity)
     {
         try
         {
@@ -36,7 +36,7 @@ public class NameMapper
         }
     }
 
-    public NameEntity dtoToEntity(NameDTO dto)
+    public Name dtoToEntity(NameDTO dto)
     {
         try
         {
@@ -44,7 +44,7 @@ public class NameMapper
             {
                 return null;
             }
-            return NameEntity.builder().nconst(dto.getNconst()).primaryName(dto.getPrimaryName()).birthYear(
+            return Name.builder().nconst(dto.getNconst()).primaryName(dto.getPrimaryName()).birthYear(
                             dto.getBirthYear()).deathYear(dto.getDeathYear()).primaryProfession(dto.getPrimaryProfession())
                     .knownForTitles(dto.getKnownForTitles()).build();
         }

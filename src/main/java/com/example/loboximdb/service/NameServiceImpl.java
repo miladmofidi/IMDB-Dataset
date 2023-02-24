@@ -1,7 +1,7 @@
 package com.example.loboximdb.service;
 
 import com.example.loboximdb.domain.dto.NameDTO;
-import com.example.loboximdb.domain.entity.NameEntity;
+import com.example.loboximdb.domain.entity.Name;
 import com.example.loboximdb.domain.mappers.NameMapper;
 import com.example.loboximdb.repository.NameRepository;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +31,7 @@ public class NameServiceImpl implements NameService
 
     public NameDTO insertOrUpdateImdb(NameDTO inputtedDto)
     {
-        Optional<NameEntity> name = repository.findById(inputtedDto.getNconst());
+        Optional<Name> name = repository.findById(inputtedDto.getNconst());
         if (name.isPresent())
         {
             name.get().setPrimaryName(inputtedDto.getPrimaryName());
@@ -39,11 +39,11 @@ public class NameServiceImpl implements NameService
             name.get().setBirthYear(inputtedDto.getBirthYear());
             name.get().setKnownForTitles(inputtedDto.getKnownForTitles());
             name.get().setPrimaryProfession(inputtedDto.getPrimaryProfession());
-            NameEntity entity = repository.save(name.get());
+            Name entity = repository.save(name.get());
             return mapper.entityToDto(entity);
         }
 
-        NameEntity entity = mapper.dtoToEntity(inputtedDto);
+        Name entity = mapper.dtoToEntity(inputtedDto);
         entity = repository.save(entity);
         return mapper.entityToDto(entity);
     }
@@ -71,13 +71,13 @@ public class NameServiceImpl implements NameService
 
     public NameDTO findByNconst(String nconst)
     {
-        NameEntity entity = repository.findByNconst(nconst);
+        Name entity = repository.findByNconst(nconst);
         return mapper.entityToDto(entity);
     }
 
     public NameDTO findByPrimaryName(String primaryName)
     {
-        NameEntity entity = repository.findByPrimaryName(primaryName);
+        Name entity = repository.findByPrimaryName(primaryName);
         return mapper.entityToDto(entity);
     }
 }

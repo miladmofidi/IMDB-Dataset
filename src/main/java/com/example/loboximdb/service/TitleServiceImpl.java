@@ -1,7 +1,7 @@
 package com.example.loboximdb.service;
 
 import com.example.loboximdb.domain.dto.TitleDTO;
-import com.example.loboximdb.domain.entity.TitleEntity;
+import com.example.loboximdb.domain.entity.Title;
 import com.example.loboximdb.domain.mappers.TitleMapper;
 import com.example.loboximdb.repository.TitleRepository;
 import org.apache.logging.log4j.LogManager;
@@ -33,16 +33,16 @@ public class TitleServiceImpl implements TitleService
     @Override
     public TitleDTO insertOrUpdateImdb(TitleDTO inputtedDto)
     {
-        Optional<TitleEntity> title = titleRepository.findById(inputtedDto.getTconst());
+        Optional<Title> title = titleRepository.findById(inputtedDto.getTconst());
         if (title.isPresent())
         {
             title.get().setDirectors(inputtedDto.getDirectors());
             title.get().setWriters(inputtedDto.getWriters());
-            TitleEntity entity = titleRepository.save(title.get());
+            Title entity = titleRepository.save(title.get());
             return mapper.entityToDto(entity);
         }
 
-        TitleEntity entity = mapper.dtoToEntity(inputtedDto);
+        Title entity = mapper.dtoToEntity(inputtedDto);
         entity = titleRepository.save(entity);
         return mapper.entityToDto(entity);
     }
@@ -70,7 +70,7 @@ public class TitleServiceImpl implements TitleService
     @Override
     public TitleDTO findByTconst(String tconst)
     {
-        TitleEntity entity = titleRepository.findByTconst(tconst);
+        Title entity = titleRepository.findByTconst(tconst);
         return mapper.entityToDto(entity);
     }
 }
