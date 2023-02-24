@@ -1,10 +1,10 @@
 package com.example.loboximdb.service.data_initializer;
 
-import com.example.loboximdb.domain.ImdbDto;
-import com.example.loboximdb.domain.ImdbEntity;
-import com.example.loboximdb.domain.Mapper;
-import com.example.loboximdb.domain.enums.ImdbDataModelIndex;
-import com.example.loboximdb.service.ImdbServiceImpl;
+import com.example.loboximdb.domain.dto.TitleDTO;
+import com.example.loboximdb.domain.entity.TitleEntity;
+import com.example.loboximdb.domain.mappers.TitleMapper;
+import com.example.loboximdb.service.NameServiceImpl;
+import com.example.loboximdb.service.TitleService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -35,24 +35,24 @@ import java.util.zip.GZIPInputStream;
  * user: miladm on 1/6/2023
  */
 @Component
-public class DataInitializer implements CommandLineRunner
+public class TitlesDatasetInitializer implements CommandLineRunner
 {
-    private static final Logger LOGGER = LogManager.getLogger(DataInitializer.class);
-    private final ImdbServiceImpl service;
-    private final Mapper mapper;
+    private static final Logger LOGGER = LogManager.getLogger(TitlesDatasetInitializer.class);
+    private final TitleService service;
+    private final TitleMapper titleMapper;
 
-    private static final String URL = "https://datasets.imdbws.com/name.basics.tsv.gz";
-    private static String fileName = "imdb_gzip_with_sample_data.tsv.gz";
-    private static Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip", fileName);
-    private final String USER_AGENT =
+    private static final String URL = "https://datasets.imdbws.com/title.crew.tsv.gz";
+    private static final String FILE_NAME = "sample-title-crews.tsv.gz";
+    private static final Path SOURCE_PATH = Paths.get("src", "main", "resources", "sample_gzip", FILE_NAME);
+    private static final String USER_AGENT =
             "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36";
     @Value("${application.readOnlineData}")
     private boolean readOnline;
 
-    public DataInitializer(ImdbServiceImpl service, Mapper mapper)
+    public TitlesDatasetInitializer(TitleService service, TitleMapper titleMapper)
     {
         this.service = service;
-        this.mapper = mapper;
+        this.titleMapper = titleMapper;
     }
 
     @Override
@@ -84,19 +84,16 @@ public class DataInitializer implements CommandLineRunner
         }
         else
         {
-            gzipFile = new File(sourcePath.toUri());
+            gzipFile = new File(SOURCE_PATH.toUri());
         }
 
         try (GZIPInputStream gzip = new GZIPInputStream(
                 readOnline ? httpURLConnection.getInputStream() : Files.newInputStream(gzipFile.toPath()));
              BufferedReader br = new BufferedReader(new InputStreamReader(gzip, StandardCharsets.UTF_8));
              CSVParser csvParser = new CSVParser(br, CSVFormat.TDF.builder()
-                     .setHeader(ImdbDataModelIndex.NCONST.label,
-                                ImdbDataModelIndex.PRIMARYNAME.label,
-                                ImdbDataModelIndex.BIRTHYEAR.label,
-                                ImdbDataModelIndex.DEATHYEAR.label,
-                                ImdbDataModelIndex.PRIMARYPROFESSION.label,
-                                ImdbDataModelIndex.KNOWNFORTITLES.label)
+                     .setHeader("tconst",
+                                "directors",
+                                "writers")
                      .setSkipHeaderRecord(true)
                      .setTrim(true)
                      .build());
@@ -107,20 +104,20 @@ public class DataInitializer implements CommandLineRunner
             {
                 if (csvRecord.size() >= csvParser.getHeaderMap().size())
                 {
-                    Optional<ImdbEntity> imdbEntity = buildImdbEntity(csvRecord);
-                    imdbEntity.ifPresent(obj -> {
-                        ImdbDto imdbDto = mapper.entityToDto(imdbEntity.get());
-                        service.insertOrUpdateImdb(imdbDto);
+                    Optional<TitleEntity> titleEntity = buildImdbEntity(csvRecord);
+                    titleEntity.ifPresent(obj -> {
+                        TitleDTO titleDTO = titleMapper.entityToDto(titleEntity.get());
+                        service.insertOrUpdateImdb(titleDTO);
                     });
-                    System.out.println("New imdb saved in Database!");
+                    System.out.println("New title saved in Database!");
                     itemCounter++;
                 }
             }
-            LOGGER.info("Count of saved items: " + itemCounter);
+            LOGGER.info("Count of saved Title items: " + itemCounter);
         }
         catch (Exception e)
         {
-            LOGGER.error("An error has happened in reading data from the IMDB server!");
+            LOGGER.error("An error has happened in reading data from the IMDB data source!");
             e.printStackTrace(System.err);
         }
         if (httpURLConnection != null)
@@ -129,22 +126,15 @@ public class DataInitializer implements CommandLineRunner
         }
     }
 
-    private static Optional<ImdbEntity> buildImdbEntity(CSVRecord csvRecord)
+    private static Optional<TitleEntity> buildImdbEntity(CSVRecord csvRecord)
     {
-        return Optional.ofNullable(ImdbEntity.builder()
-                                           .nconst(csvRecord.get(ImdbDataModelIndex.NCONST.label).trim())
-                                           .primaryName(csvRecord.get(ImdbDataModelIndex.PRIMARYNAME.label)
-                                                                .trim())
-                                           .birthYear(csvRecord.get(
-                                                   ImdbDataModelIndex.BIRTHYEAR.label.trim()))
-                                           .deathYear(csvRecord.get(ImdbDataModelIndex.DEATHYEAR.label)
-                                                              .trim())
-                                           .primaryProfession(Arrays.asList(
-                                                   csvRecord.get(
-                                                                   ImdbDataModelIndex.PRIMARYPROFESSION.label)
+        return Optional.ofNullable(TitleEntity.builder()
+                                           .tconst(csvRecord.get("tconst").trim())
+                                           .directors(Arrays.asList(
+                                                   csvRecord.get("directors")
                                                            .trim().split(",")))
-                                           .knownForTitles(Arrays.asList(
-                                                   csvRecord.get(ImdbDataModelIndex.KNOWNFORTITLES.label)
+                                           .writers(Arrays.asList(
+                                                   csvRecord.get("writers")
                                                            .trim().split(",")))
                                            .build());
     }
@@ -153,6 +143,6 @@ public class DataInitializer implements CommandLineRunner
     @PreDestroy
     public void preDestroy() throws IOException
     {
-        FileUtils.deleteDirectory(new File("C:\\tempDb"));
+        FileUtils.deleteDirectory(new File("C:\\temp-Imdb"));
     }
 }

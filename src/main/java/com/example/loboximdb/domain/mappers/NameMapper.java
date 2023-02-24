@@ -1,5 +1,7 @@
-package com.example.loboximdb.domain;
+package com.example.loboximdb.domain.mappers;
 
+import com.example.loboximdb.domain.dto.NameDTO;
+import com.example.loboximdb.domain.entity.NameEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -10,11 +12,11 @@ import org.springframework.stereotype.Component;
  * user: miladm on 2/15/2023
  */
 @Component
-public class Mapper
+public class NameMapper
 {
-    private static final Logger LOGGER = LogManager.getLogger(Mapper.class);
+    private static final Logger LOGGER = LogManager.getLogger(NameMapper.class);
 
-    public ImdbDto entityToDto(ImdbEntity entity)
+    public NameDTO entityToDto(NameEntity entity)
     {
         try
         {
@@ -22,7 +24,7 @@ public class Mapper
             {
                 return null;
             }
-            return ImdbDto.builder().nconst(entity.getNconst()).PrimaryName(entity.getPrimaryName()).BirthYear(
+            return NameDTO.builder().nconst(entity.getNconst()).PrimaryName(entity.getPrimaryName()).BirthYear(
                             entity.getBirthYear()).DeathYear(entity.getDeathYear())
                     .PrimaryProfession(entity.getPrimaryProfession()).KnownForTitles(entity.getKnownForTitles())
                     .build();
@@ -34,7 +36,7 @@ public class Mapper
         }
     }
 
-    public ImdbEntity dtoToEntity(ImdbDto dto)
+    public NameEntity dtoToEntity(NameDTO dto)
     {
         try
         {
@@ -42,7 +44,7 @@ public class Mapper
             {
                 return null;
             }
-            return ImdbEntity.builder().nconst(dto.getNconst()).primaryName(dto.getPrimaryName()).birthYear(
+            return NameEntity.builder().nconst(dto.getNconst()).primaryName(dto.getPrimaryName()).birthYear(
                             dto.getBirthYear()).deathYear(dto.getDeathYear()).primaryProfession(dto.getPrimaryProfession())
                     .knownForTitles(dto.getKnownForTitles()).build();
         }

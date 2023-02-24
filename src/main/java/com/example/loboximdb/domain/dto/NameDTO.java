@@ -1,6 +1,5 @@
-package com.example.loboximdb.domain;
+package com.example.loboximdb.domain.dto;
 
-import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ImdbDto
+public class NameDTO
 {
     //@CsvBindByPosition(position = 0)
     //@CsvBindByName

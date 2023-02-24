@@ -1,6 +1,6 @@
 package com.example.loboximdb.service;
 
-import com.example.loboximdb.domain.ImdbDto;
+import com.example.loboximdb.domain.dto.NameDTO;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.BufferedReader;
@@ -22,7 +22,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class CsvParsingByOpenCsv
 {
-    private static String fileName = "imdb_gzip_with_sample_data.tsv.gz";
+    private static String fileName = "sample-name-basics.tsv.gz";
     private static Path sourcePath = Paths.get("src", "main", "resources", "sample_gzip", fileName);
 
     public static void main(String[] args) throws IOException
@@ -31,8 +31,8 @@ public class CsvParsingByOpenCsv
         GZIPInputStream gzip = new GZIPInputStream(Files.newInputStream(gzipFile.toPath()));
         Reader reader = new BufferedReader(new InputStreamReader(gzip, StandardCharsets.UTF_8));
 
-        List<ImdbDto> beans = new CsvToBeanBuilder(reader)
-                .withType(ImdbDto.class)
+        List<NameDTO> beans = new CsvToBeanBuilder(reader)
+                .withType(NameDTO.class)
                 .build()
                 .parse();
 

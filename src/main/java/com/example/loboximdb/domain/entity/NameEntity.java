@@ -1,4 +1,4 @@
-package com.example.loboximdb.domain;
+package com.example.loboximdb.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.util.List;
 /**
  * @author milad.mofidi@gmail.com
@@ -19,7 +20,7 @@ import java.util.List;
 @Entity
 @Builder
 //@Table(name = "tbl_imdb")
-public class ImdbEntity
+public class NameEntity
 {
     @Id
     //@GeneratedValue
@@ -41,6 +42,7 @@ public class ImdbEntity
     private List<String> primaryProfession;
 
     @Column(name="knownForTitles")
+    @ManyToMany
     @ElementCollection(targetClass=String.class)
     private List<String> knownForTitles;
 }
