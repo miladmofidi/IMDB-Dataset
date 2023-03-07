@@ -36,7 +36,7 @@ public class ImdbController
     @Resource
     private NameService nameService;
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<NameDTO> save(@RequestBody NameDTO input)
     {
         LOGGER.debug("REST request to save IMDB: {}", input);
@@ -48,7 +48,7 @@ public class ImdbController
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<Page> getAll(@RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "10") int size,
                                        @RequestParam(defaultValue = "nconst") String sortColumn,
@@ -72,7 +72,7 @@ public class ImdbController
         }
     }
 
-    @GetMapping("/getCountOfAll")
+    @GetMapping("/count")
     public ResponseEntity<Long> getCountOfAll()
     {
         LOGGER.debug("REST request to get count of all Names");
@@ -87,7 +87,7 @@ public class ImdbController
         }
     }
 
-    @GetMapping("/getByNconst/{nconst}")
+    @GetMapping("/nconst/{nconst}")
     public ResponseEntity<NameDTO> getImdbByNconst(@PathVariable String nconst)
     {
         LOGGER.debug("REST request to get Name with nconst: {}", nconst);
@@ -102,7 +102,7 @@ public class ImdbController
         }
     }
 
-    @GetMapping("/getByPrimaryName/{primaryName}")
+    @GetMapping("/primaryName/{primaryName}")
     public ResponseEntity<NameDTO> getImdbByPrimaryName(@PathVariable String primaryName)
     {
         LOGGER.debug("REST request to get Name with primaryName: {}", primaryName);

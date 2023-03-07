@@ -37,7 +37,7 @@ public class TitleController
     @Resource
     private TitleService titleService;
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity<TitleDTO> save(@RequestBody TitleDTO input)
     {
         LOGGER.debug("REST request to save Title: {}", input);
@@ -49,7 +49,7 @@ public class TitleController
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @GetMapping("/getAll")
+    @GetMapping
     public ResponseEntity<Page> getAll(@RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "10") int size,
                                        @RequestParam(defaultValue = "tconst") String sortColumn,
@@ -73,7 +73,7 @@ public class TitleController
         }
     }
 
-    @GetMapping("/getCountOfAll")
+    @GetMapping("/count")
     public ResponseEntity<Long> getCountOfAll()
     {
         LOGGER.debug("REST request to get count all of Titles");
@@ -88,7 +88,7 @@ public class TitleController
         }
     }
 
-    @GetMapping("/getByTconst/{tconst}")
+    @GetMapping("/tconst/{tconst}")
     public ResponseEntity<TitleDTO> getByTconst(@PathVariable String tconst)
     {
         LOGGER.debug("REST request to get Title by tconst: {}", tconst);
