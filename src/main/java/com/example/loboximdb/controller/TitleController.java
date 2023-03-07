@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author milad mofidi
@@ -100,6 +101,20 @@ public class TitleController
         else
         {
             throw new RecordNotFoundException("Invalid tconst: " + tconst);
+        }
+    }
+
+    @GetMapping("/tconst/")
+    public ResponseEntity<List<TitleDTO>> getNotNullTconst()
+    {
+        List<TitleDTO> result = titleService.findAllTconstNotNull();
+        if (result != null)
+        {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else
+        {
+            throw new RecordNotFoundException("Invalid tconst: ");
         }
     }
 

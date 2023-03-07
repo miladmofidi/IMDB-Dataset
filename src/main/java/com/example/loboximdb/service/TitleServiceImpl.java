@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -72,5 +74,16 @@ public class TitleServiceImpl implements TitleService
     {
         Title entity = titleRepository.findByTconst(tconst);
         return mapper.entityToDto(entity);
+    }
+
+    @Override
+    public List<TitleDTO> findAllTconstNotNull()
+    {
+        List<Title> titles = titleRepository.findAllNotNull();
+        List<TitleDTO> dtos = new ArrayList<>();
+        for (Title title:titles ) {
+            dtos.add(mapper.entityToDto(title));
+        }
+        return dtos;
     }
 }
