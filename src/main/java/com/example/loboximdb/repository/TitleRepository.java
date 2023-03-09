@@ -21,4 +21,6 @@ public interface TitleRepository extends CrudRepository<Title, String>
     //@Query("from Title where tconst is")
     @Query("FROM Title WHERE tconst IS NOT NULL")
     List<Title> findAllNotNull();
+    @Query("SELECT title FROM Title title")
+    List<Title> findDirAndWri();
 }

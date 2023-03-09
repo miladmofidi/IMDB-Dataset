@@ -7,12 +7,12 @@ import com.example.loboximdb.repository.TitleRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author milad mofidi
@@ -86,4 +86,38 @@ public class TitleServiceImpl implements TitleService
         }
         return dtos;
     }
+
+    @Override
+    public Page<TitleDTO> findSameDirectorsAndWriters(Pageable pageable){
+        List<String> sameDirectorsAndWriters = findSameDirectorsAndWriters();
+        List<TitleDTO> titles = sameDirectorsAndWriters.stream().map(this::findByTconst).collect(Collectors.toList());
+
+        final int start = (int) pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), sameDirectorsAndWriters.size());
+        return new PageImpl<>(titles.subList(start, end), pageable, titles.size());
+    }
+    @Override
+    public List<TitleDTO> findSameDirAndWri(){
+        List<String> sameDirectorsAndWriters = findSameDirectorsAndWriters();
+        List<TitleDTO> titles = sameDirectorsAndWriters.stream().map(this::findByTconst).collect(Collectors.toList());
+        return titles;
+    }
+
+    private List<String> findSameDirectorsAndWriters()
+    {
+        Set<String> sameDirectorsAndWriters = new HashSet<>();
+        titleRepository.findDirAndWri().forEach(title -> {
+            title.getWriters().stream()
+                    .forEach(writer -> {
+                        title.getDirectors().stream()
+                                .filter(director -> director.equals(writer))
+                                //.limit(1)
+                                .forEach(director -> {
+                                    sameDirectorsAndWriters.add(title.getTconst());
+                                });
+                    });
+        });
+        return new ArrayList<>(sameDirectorsAndWriters);
+    }
+
 }

@@ -17,5 +17,8 @@ public interface TitleService
     long countOfAllImdbs();
     TitleDTO findByTconst(String tconst);
     List<TitleDTO> findAllTconstNotNull();
+    Page<TitleDTO> findSameDirectorsAndWriters(Pageable pageable);
+    List<TitleDTO> findSameDirAndWri();
+
 
 }

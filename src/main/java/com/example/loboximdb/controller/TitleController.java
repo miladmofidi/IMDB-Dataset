@@ -118,6 +118,31 @@ public class TitleController
         }
     }
 
+    @GetMapping("/getAllSameDrAndWr")
+    public ResponseEntity<Page> getAllSameDrAndWr(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "10") int size,
+                                                  @RequestParam(defaultValue = "tconst") String sortColumn,
+                                                  @RequestParam(defaultValue = "asc") String sortOrder)
+    {
+        Sort sort =
+                sortOrder.equalsIgnoreCase("desc") ? Sort.by(sortColumn).descending() : Sort.by(sortColumn).ascending();
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<TitleDTO> result;
+
+
+        LOGGER.debug("REST request to get all Titles");
+        //result = titleService.findSameDirectorsAndWriters(paging);
+        result = titleService.findSameDirectorsAndWriters(paging);
+        if (result != null)
+        {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
+        else
+        {
+            throw new RecordNotFoundException("No Title item found");
+        }
+    }
+
 
 }
 
