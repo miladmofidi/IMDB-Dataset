@@ -6,13 +6,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * @author milad.mofidi@gmail.com
  */
 @Repository
-public interface NameRepository extends CrudRepository<Name, String>
-{
+public interface NameRepository extends CrudRepository<Name, String> {
     Page<Name> findAll(Pageable pageable);
+
     Name findByNconst(String nconst);
+
     Name findByPrimaryName(String primaryName);
+
+    List<Name> findAllByPrimaryProfessionContaining(String primaryProfession);
+    List<Name> findAllByPrimaryProfession(String primaryProfession);
 }

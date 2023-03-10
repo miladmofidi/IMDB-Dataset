@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -79,5 +81,13 @@ public class NameServiceImpl implements NameService
     {
         Name entity = repository.findByPrimaryName(primaryName);
         return mapper.entityToDto(entity);
+    }
+    public List<NameDTO> findAllByProfession(String primaryProfession){
+
+        List<Name> foundedItems = repository.findAllByPrimaryProfession(primaryProfession);
+        List<NameDTO> result = new ArrayList<>();
+        repository.findAllByPrimaryProfession(primaryProfession).forEach( name -> result.add(mapper.entityToDto(name)) );
+        return result;
+
     }
 }

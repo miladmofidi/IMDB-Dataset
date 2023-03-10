@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author milad mofidi
@@ -114,6 +115,21 @@ public class NameController
         else
         {
             throw new RecordNotFoundException("Invalid primaryName: " + primaryName);
+        }
+    }
+
+    @GetMapping("/getByPrimaryProfession/{primaryProfession}")
+    public ResponseEntity<List<NameDTO>> getAllByPrimaryProfession(@PathVariable String primaryProfession)
+    {
+        LOGGER.debug("REST request to get count of all Names");
+        List<NameDTO> allByProfession = nameService.findAllByProfession(primaryProfession);
+        if (allByProfession.size() != 0)
+        {
+            return new ResponseEntity<>(allByProfession, HttpStatus.OK);
+        }
+        else
+        {
+            throw new RecordNotFoundException("No Name item found");
         }
     }
 }
