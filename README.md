@@ -1,7 +1,8 @@
 # IMDB-Dataset
 ### Overview:
 **This is an application to download the IMDB datasets, load, and cache movie and crews data in the local Database, and provide some API in order to find some data per each person(actors, directors, and other crews) and movie based on name or profession, or Movie title.**
-Tasks:
+
+**Tasks:**
 1. Import the dataset into the application
 2. Return all the titles in which both director and writer are the same person and he/she is still alive
 3. Get two actors and return all the titles in which both of them played at
